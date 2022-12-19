@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    //variables
     [SerializeField]
     float _playerSpeed = 3.5f;
     [SerializeField]
@@ -13,10 +12,19 @@ public class Player : MonoBehaviour
     [SerializeField]
     private float fireRate = 0.15f;
     private float canFire = -1f;
+    [SerializeField]
+    int _lives = 3;
+    SpawnManager _spawnManager;
 
     void Start()
     {
         transform.position = new Vector3 (0, 0f, 0);
+        _spawnManager = GameObject.Find("SpawnManager").GetComponent<SpawnManager>();
+
+        if (_spawnManager == null)
+        {
+            Debug.LogError("Player is not able to find Spawn Manager");
+        }
     }
 
     void Update()
@@ -64,4 +72,17 @@ public class Player : MonoBehaviour
             transform.position = new Vector3(10.23f, transform.position.y, 0);
         }
     }
+
+    public void Damage()
+    {
+        _lives--;
+
+        if(_lives == 0)
+        {
+            _spawnManager.onPlayerDeath();
+            Destroy(this.gameObject);
+        }
+    }
+
+    
 }
